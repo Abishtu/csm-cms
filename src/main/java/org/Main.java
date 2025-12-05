@@ -1,17 +1,43 @@
 package org;
 
+import java.util.HashMap;
+import java.util.Map;
+
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     static void main() {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        IO.println(String.format("Hello and welcome!"));
+        Map<String, String> env = System.getenv();
+        Map<String, Object> configOverrides = new HashMap<String, Object>();
+        for (String envName : env.keySet()) {
+            StringBuilder postgresUrl = new StringBuilder("jdbc:postgresql://");
+            String postgresHost = "";
+            String postgresDb = "";
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            IO.println("i = " + i);
+            if (envName.contains("POSTGRES_USER")) {
+                configOverrides.put("jakarta.persistence.jdbc.user", env.get(envName));
+            }
+
+            if (envName.contains("POSTGRES_PASSWORD")) {
+                configOverrides.put("jakarta.persistence.jdbc.password", env.get(envName));
+            }
+
+            if (envName.contains("POSTGRES_HOSTNAME")) {
+                postgresHost = env.get(envName);
+            }
+
+            if (envName.contains("POSTGRES_DB")) {
+                postgresDb = env.get(envName);
+            }
+
+            if (postgresHost.isEmpty() && postgresDb.isEmpty()) {
+                String url = postgresUrl
+                                .append(postgresHost)
+                                .append("/")
+                                .append(postgresDb)
+                                .toString();
+                configOverrides.put("jakarta.persistence.jdbc.url", url);
+            }
         }
     }
 }
