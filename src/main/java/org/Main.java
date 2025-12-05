@@ -1,5 +1,8 @@
 package org;
 
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,5 +42,12 @@ public class Main {
                 configOverrides.put("jakarta.persistence.jdbc.url", url);
             }
         }
+
+        try {
+            EntityManagerFactory emf = Persistence.createEntityManagerFactory("org.samcms.db", configOverrides);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }
