@@ -1,4 +1,4 @@
-package org.samcms.db.model;
+package org.csmcms.db.model;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;

@@ -2,8 +2,8 @@ package org;
 
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
-import org.samcms.db.dao.ContentDao;
-import org.samcms.db.model.Content;
+import org.csmcms.db.dao.ContentDao;
+import org.csmcms.db.model.Content;
 
 import java.util.HashMap;
 import java.util.List;

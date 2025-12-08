@@ -1,4 +1,4 @@
-package org.samcms.db.dao;
+package org.csmcms.db.model;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ContentDaoTest {
+class TagTest {
 
     @BeforeEach
     void setUp() {
@@ -17,7 +17,12 @@ class ContentDaoTest {
     }
 
     @Test
-    void testCreateNewContent() {
+    void builder() {
+        Tag tag = Tag
+                .builder()
+                .setName("New Tag")
+                .build();
 
+        assertEquals("New Tag", tag.getName());
     }
 }

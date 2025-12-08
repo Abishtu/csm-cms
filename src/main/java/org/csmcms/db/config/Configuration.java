@@ -1,4 +1,4 @@
-package org.samcms.db.config;
+package org.csmcms.db.config;
 
 import java.util.Optional;
 

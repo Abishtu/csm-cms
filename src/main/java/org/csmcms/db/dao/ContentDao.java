@@ -1,9 +1,9 @@
-package org.samcms.db.dao;
+package org.csmcms.db.dao;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceException;
-import org.samcms.db.model.Content;
+import org.csmcms.db.model.Content;
 
 import java.util.List;
 import java.util.Optional;

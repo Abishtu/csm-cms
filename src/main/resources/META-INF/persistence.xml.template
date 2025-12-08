@@ -19,8 +19,8 @@
       <property name="hibernate.hbm2ddl.auto" value="update"/>
     </properties>
 
-    <class>org.samcms.db.model.Content</class>
-    <class>org.samcms.db.model.Tag</class>
+    <class>model.org.csmcms.db.Content</class>
+    <class>model.org.csmcms.db.Tag</class>
 
   </persistence-unit>
 </persistence>

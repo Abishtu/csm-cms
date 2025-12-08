@@ -1,8 +1,8 @@
-package org.samcms.db;
+package org.csmcms.db;
 
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
-import org.samcms.db.config.Configuration;
+import org.csmcms.db.config.Configuration;
 
 import java.util.HashMap;
 import java.util.Map;

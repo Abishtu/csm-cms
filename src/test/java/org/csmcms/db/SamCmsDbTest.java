@@ -1,8 +1,6 @@
-package org.samcms.db;
+package org.csmcms.db;
 
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class SamCmsDbTest {
 

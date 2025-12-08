@@ -1,4 +1,4 @@
-package org.samcms.db.model;
+package org.csmcms.db.model;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
