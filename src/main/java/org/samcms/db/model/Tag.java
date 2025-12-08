@@ -44,14 +44,17 @@ public class Tag {
     }
 
     public interface NameSetter {
-        NameSetter setName(Tag tag, String name);
+        TagBuilder setName(String name);
+    }
+
+    public interface TagBuilder {
         Tag build();
     }
 
-    private static class Builder implements NameSetter {
+    private static class Builder implements NameSetter, TagBuilder {
         private String name;
         @Override
-        public NameSetter setName(Tag tag, String name) {
+        public TagBuilder setName(String name) {
             this.name = name;
             return this;
         }

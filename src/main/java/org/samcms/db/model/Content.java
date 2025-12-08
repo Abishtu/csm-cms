@@ -60,6 +60,10 @@ public class Content {
         this.contentPath = contentPath;
     }
 
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -105,11 +109,17 @@ public class Content {
     }
 
     public interface TagsSetter {
-        TagsSetter setTags(Set<Tag> tags);
+        TagSetter initTags();
         Content build();
     }
 
-    private static class Builder implements NameSetter, DescriptionSetter, ContentTypeSetter, ContentPathSetter, TagsSetter {
+    public interface TagSetter {
+        TagSetter addTag(String tag);
+        TagSetter addTag(Tag tag);
+        Content build();
+    }
+
+    private static class Builder implements NameSetter, DescriptionSetter, ContentTypeSetter, ContentPathSetter, TagsSetter, TagSetter {
 
         private String name;
         private String description;
@@ -133,7 +143,7 @@ public class Content {
 
         @Override
         public ContentPathSetter setContentType(String contentType) {
-            this.contentPath = contentType;
+            this.contentType = contentType;
             return this;
         }
 
@@ -144,11 +154,30 @@ public class Content {
         }
 
         @Override
-        public TagsSetter setTags(Set<Tag> tags) {
-            this.tags = tags;
+        public TagSetter initTags() {
+            if (this.tags == null) {
+                this.tags = new HashSet<Tag>();
+            }
             return this;
         }
 
+        @Override
+        public TagSetter addTag(Tag tag) {
+            if (this.tags != null) {
+                this.tags.add(tag);
+            }
+
+            return this;
+        }
+
+        @Override
+        public TagSetter addTag(String tag) {
+            if (this.tags != null) {
+                this.tags.add(Tag.builder().setName(tag).build());
+            }
+
+            return this;
+        }
         @Override
         public Content build() {
             Content content = new Content();
@@ -156,6 +185,7 @@ public class Content {
             content.setDescription(description);
             content.setContentType(contentType);
             content.setContentPath(contentPath);
+            content.setTags(tags);
 
             return content;
         }
