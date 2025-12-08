@@ -108,6 +108,10 @@ public class Content {
         TagsSetter setContentPath(String path);
     }
 
+    public interface CreateTagSet {
+        TagsSetter initTags();
+    }
+
     public interface TagsSetter {
         TagSetter initTags();
         Content build();
