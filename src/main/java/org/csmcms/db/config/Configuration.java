@@ -1,51 +1,52 @@
 package org.csmcms.db.config;
 
+import org.csmcms.db.config.options.DbService;
+
 import java.util.Optional;
 
 public class Configuration {
 
-    private String pu;
-    private String driver;
-    private String url;
+    private DbService dbService;
 
-    private String dbService;
-
+    private String persistenceUnit;
     private String username;
     private String password;
     private String host;
-    private String db;
+    private String url;
 
-    private Optional<String> dbDriver;
-
-    public String pu() {
-        return pu;
+    public String getPersistenceUnit() {
+        return persistenceUnit;
     }
 
-    public String host() {
-        return host;
+    public void setPersistenceUnit(String persistenceUnit) {
+        this.persistenceUnit = persistenceUnit;
     }
 
-    public void setPu(String pu) {
-        this.pu = pu;
-    }
-
-    public String driver() {
-        return driver;
-    }
-
-    public void setDriver(String driver) {
-        this.driver = driver;
-    }
-
-    public String url() {
+    public String getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setUrl() {
+
+        String host = "";
+        String dbName = switch (dbService) {
+            case Postgres ->  "postgres";
+            case MySQL -> "mysql";
+            case SQLite -> "sqlite";
+        };
+
+
     }
 
-    public String userName() {
+    public DbService getDbService() {
+        return dbService;
+    }
+
+    public void setDbService(DbService dbService) {
+        this.dbService = dbService;
+    }
+
+    public String getUsername() {
         return username;
     }
 
@@ -53,7 +54,7 @@ public class Configuration {
         this.username = username;
     }
 
-    public String password() {
+    public String getPassword() {
         return password;
     }
 
@@ -61,12 +62,12 @@ public class Configuration {
         this.password = password;
     }
 
-    public Optional<String> dbDriver() {
-        return dbDriver;
+    public String getHost() {
+        return host;
     }
 
-    public void setDbDriver(Optional<String> dbDriver) {
-        this.dbDriver = dbDriver;
+    public void setHost(String host) {
+        this.host = host;
     }
 
     public HostSetter builder() {
@@ -78,7 +79,7 @@ public class Configuration {
     }
 
     public interface UsernameSetter {
-        public PasswordSetter username(String driver);
+        public PasswordSetter username(String username);
     }
 
     public interface PasswordSetter {
@@ -86,84 +87,56 @@ public class Configuration {
     }
 
     public interface DbSetter {
-        public DbServiceSetter db(String db);
-    }
-
-    public interface DbServiceSetter {
-        public UrlSetter dbService(String dbService);
+        public UrlSetter dbService(DbService dbService);
     }
 
     public interface UrlSetter {
-        public OptionalFieldsSetter url();
+        public FinalBuilder url();
     }
 
-    public interface OptionalFieldsSetter {
-        public OptionalFieldsSetter dbDriver(Optional<String> dbDriver);
+    public interface FinalBuilder {
         public Configuration build();
     }
 
-    private static class Builder implements HostSetter, UsernameSetter, PasswordSetter, DbSetter, DbServiceSetter, UrlSetter, OptionalFieldsSetter {
-        private String pu;
-        private String driver;
-        private String url;
+    private static class Builder implements HostSetter, UsernameSetter, PasswordSetter, DbSetter, UrlSetter, FinalBuilder {
+
+        private DbService dbService;
+        private String persistenceUnit;
         private String username;
         private String password;
-        private String db;
-        private String dbService;
         private String host;
 
-
-        private Optional<String> dbDriver;
-
         @Override
-        public DbServiceSetter db(String db) {
-            this.db = db;
-            return this;
-        }
-
-        @Override
-        public UsernameSetter host(String host) {
-            this.host = host;
-            return this;
-        }
-
-        @Override
-        public OptionalFieldsSetter dbDriver(Optional<String> dbDriver) {
-            this.dbDriver = dbDriver;
+        public UrlSetter dbService(DbService dbService) {
+            this.dbService = dbService;
             return this;
         }
 
         @Override
         public Configuration build() {
-            Configuration config = new Configuration();
-            config.setPu(this.pu);
-            config.setDriver(this.driver);
-            config.setUrl(this.url);
-            config.setDriver(this.driver);
-            config.setPassword(this.driver);
-            config.setDbDriver(this.dbDriver);
-            config.setUsername(this.username);
+            return null;
+        }
 
-            return config;
+        @Override
+        public UsernameSetter host(String host) {
+            this.host = host;
+            return null;
         }
 
         @Override
         public DbSetter password(String password) {
+            this.password = password;
             return null;
         }
 
         @Override
-        public PasswordSetter username(String driver) {
+        public FinalBuilder url() {
             return null;
         }
 
         @Override
-        public UrlSetter dbService(String dbService) {
-            return null;
-        }
-
-        @Override
-        public OptionalFieldsSetter url() {
+        public PasswordSetter username(String username) {
+            this.username = username;
             return null;
         }
     }
