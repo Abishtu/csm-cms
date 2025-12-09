@@ -13,6 +13,8 @@ public class Configuration {
     private String password;
     private String host;
     private String url;
+    private String db;
+    private String path;
 
     public String getPersistenceUnit() {
         return persistenceUnit;
@@ -27,15 +29,37 @@ public class Configuration {
     }
 
     public void setUrl() {
-
-        String host = "";
         String dbName = switch (dbService) {
-            case Postgres ->  "postgres";
-            case MySQL -> "mysql";
-            case SQLite -> "sqlite";
+            case Postgres ->  "postgres:";
+            case MySQL -> "mysql:";
+            case SQLite -> "sqlite:";
         };
 
+        String pathOrDb = switch (dbService) {
+            case Postgres, MySQL -> "//" + this.db;
+            case SQLite -> ":" + this.path;
+        };
 
+        String url = "jdbc:" + dbName +
+                pathOrDb;
+
+        this.url = url;
+    }
+
+    public String getDb() {
+        return db;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setDb(String db) {
+        this.db = db;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public DbService getDbService() {

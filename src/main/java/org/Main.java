@@ -50,7 +50,10 @@ public class Main {
         }
 
         try {
-            EntityManagerFactory emf = Persistence.createEntityManagerFactory("org.samcms.db", configOverrides);
+            EntityManagerFactory emf = Persistence.createEntityManagerFactory(
+                    "org.samcms.db",
+                    configOverrides
+            );
 
 
 
