@@ -5,163 +5,158 @@ import org.csmcms.db.config.options.DbService;
 import java.util.Optional;
 
 public class Configuration {
+    private String persistenceUnit;
 
     private DbService dbService;
 
-    private String persistenceUnit;
+    private Optional<String> dbPath;
+    private Optional<String> dbName;
+    private String dbDriver;
+
     private String username;
     private String password;
+
     private String host;
     private String url;
-    private String db;
-    private String path;
 
     public String getPersistenceUnit() {
         return persistenceUnit;
     }
 
-    public void setPersistenceUnit(String persistenceUnit) {
-        this.persistenceUnit = persistenceUnit;
+    private void setPersistenceUnit(String pu) {
+        this.persistenceUnit = pu;
     }
 
-    public String getUrl() {
-        return url;
+    public Optional<String> getDbPath() {
+        return this.dbPath;
     }
 
-    public void setUrl() {
-        String dbName = switch (dbService) {
-            case Postgres ->  "postgres:";
-            case MySQL -> "mysql:";
-            case SQLite -> "sqlite:";
+    private void setDbPath(String path) {
+        this.dbPath = switch(this.dbService) {
+            case SQLite -> Optional.of(path);
+            default -> Optional.empty();
         };
+    }
 
-        String pathOrDb = switch (dbService) {
-            case Postgres, MySQL -> "//" + this.db;
-            case SQLite -> ":" + this.path;
+    public Optional<String> getDbName() {
+        return this.dbName;
+    }
+    
+    private void setDbName(String name) {
+        this.dbName = switch(this.dbService) {
+            case SQLite -> Optional.empty();
+            default -> Optional.of(name);
         };
-
-        String url = "jdbc:" + dbName +
-                pathOrDb;
-
-        this.url = url;
     }
 
-    public String getDb() {
-        return db;
+    public String getDbDriver() {
+        return this.dbDriver;
     }
 
-    public String getPath() {
-        return path;
-    }
-
-    public void setDb(String db) {
-        this.db = db;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public DbService getDbService() {
-        return dbService;
-    }
-
-    public void setDbService(DbService dbService) {
-        this.dbService = dbService;
+    private void setDbDriver(String driver) {
+        this.dbDriver = driver;
     }
 
     public String getUsername() {
-        return username;
+        return this.username;
     }
-
-    public void setUsername(String username) {
+    
+    private void setUsername(String username) {
         this.username = username;
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
-    public void setPassword(String password) {
+    private void setPassword(String password) {
         this.password = password;
     }
 
     public String getHost() {
-        return host;
+        return this.host;
     }
-
-    public void setHost(String host) {
+    
+    private void setHost(String host) {
         this.host = host;
     }
 
-    public HostSetter builder() {
+    public String getUrl() {
+        return this.url;
+    }
+
+    private void setUrl(String url) {
+        this.url = url;
+    }
+
+    public Builder builder() {
         return new Builder();
     }
 
-    public interface HostSetter {
-        public UsernameSetter host(String host);
+    public interface DbServiceSetter {
+        SqLitePathSetter setSqLiteDbService();
+        PostgresDbNameSetter setPostgresDbService();
+        MySqlDbNameSetter setMySqlDbService();
+        TestContainerDbNameSetter setTestContainerDbService();
+    }
+
+    public interface SqLitePathSetter {
+        UsernameSetter setPath(String path);
+    }
+
+    public interface PostgresDbNameSetter {
+        UsernameSetter setName(String name);
+    }
+
+    public interface MySqlDbNameSetter {
+        UsernameSetter setName(String name);
+    }
+
+    public interface TestContainerDbNameSetter {
+        UsernameSetter setName(String name);
     }
 
     public interface UsernameSetter {
-        public PasswordSetter username(String username);
+        PasswordSetter setUsername(String username);
     }
 
     public interface PasswordSetter {
-        public DbSetter password(String password);
+        HostSetter setPassword(String password);
     }
 
-    public interface DbSetter {
-        public UrlSetter dbService(DbService dbService);
+    public interface HostSetter {
+        ConfigurationBuilder setHost(String host);
+    } 
+
+    public interface ConfigurationBuilder {
+        Configuration build();
     }
 
-    public interface UrlSetter {
-        public FinalBuilder url();
-    }
+    private class Builder implements DbServiceSetter, 
+     SqLitePathSetter, PostgresDbNameSetter,
+     MySqlDbNameSetter, TestContainerDbNameSetter, 
+     UsernameSetter, PasswordSetter, HostSetter, 
+     ConfigurationBuilder {
 
-    public interface FinalBuilder {
-        public Configuration build();
-    }
-
-    private static class Builder implements HostSetter, UsernameSetter, PasswordSetter, DbSetter, UrlSetter, FinalBuilder {
+        private String persistenceUnit;
 
         private DbService dbService;
-        private String persistenceUnit;
+
+        private String dbPath;
+        private String dbName;
+        private String dbDriver;
+
         private String username;
         private String password;
+
         private String host;
+        private String url;
 
         @Override
-        public UrlSetter dbService(DbService dbService) {
-            this.dbService = dbService;
-            return this;
+        SqLitePathSetter setSqLitePathSetter() {
+
         }
 
-        @Override
-        public Configuration build() {
-            return null;
-        }
-
-        @Override
-        public UsernameSetter host(String host) {
-            this.host = host;
-            return null;
-        }
-
-        @Override
-        public DbSetter password(String password) {
-            this.password = password;
-            return null;
-        }
-
-        @Override
-        public FinalBuilder url() {
-            return null;
-        }
-
-        @Override
-        public PasswordSetter username(String username) {
-            this.username = username;
-            return null;
-        }
     }
+   
 }

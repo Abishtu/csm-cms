@@ -4,4 +4,5 @@ public enum DbService {
     Postgres,
     MySQL,
     SQLite,
+    TestContainers,
 }
