@@ -93,6 +93,8 @@ public class Configuration {
         return new Builder();
     }
 
+    
+
     public interface DbServiceSetter {
         SqLitePathSetter setSqLiteDbService();
         PostgresDbNameSetter setPostgresDbService();
@@ -101,20 +103,25 @@ public class Configuration {
     }
 
     public interface SqLitePathSetter {
-        UsernameSetter setPath(String path);
+        PersisteneUnitSetter setPath(String path);
     }
 
     public interface PostgresDbNameSetter {
-        UsernameSetter setName(String name);
+        PersisteneUnitSetter setName(String name);
     }
 
     public interface MySqlDbNameSetter {
-        UsernameSetter setName(String name);
+        PersisteneUnitSetter setName(String name);
     }
 
     public interface TestContainerDbNameSetter {
-        UsernameSetter setName(String name);
+        PersisteneUnitSetter setName(String name);
     }
+
+    public interface PersisteneUnitSetter {
+        UsernameSetter setPersistenceUnit(String pu);
+    }
+
 
     public interface UsernameSetter {
         PasswordSetter setUsername(String username);
@@ -132,7 +139,8 @@ public class Configuration {
         Configuration build();
     }
 
-    private class Builder implements DbServiceSetter, 
+    private class Builder implements 
+     DbServiceSetter, PersisteneUnitSetter,
      SqLitePathSetter, PostgresDbNameSetter,
      MySqlDbNameSetter, TestContainerDbNameSetter, 
      UsernameSetter, PasswordSetter, HostSetter, 
@@ -153,8 +161,24 @@ public class Configuration {
         private String url;
 
         @Override
-        SqLitePathSetter setSqLitePathSetter() {
+        SqLitePathSetter setSqLiteDbService() {
+            this.dbService = DbService.SQLite;
+            this.dbDriver = "";
+            return this;
+        }
 
+        @Override
+        MySqlDbNameSetter setMySqlDbService() {
+            this.dbService = DbService.MySQL;
+            this.dbDriver = "";
+            return this;
+        }
+
+        @Override
+        PostgresDbNameSetter setPostgresDbService() {
+            this.dbService = DbService.Postgres;
+            this.dbDriver = "org.postgres.Driver";
+            return this;
         }
 
     }
