@@ -53,13 +53,13 @@ public class SamCmsDb {
 
             Map<String, Object> configOverrides = new HashMap<String, Object>();
 
-            configOverrides.put("jakarta.persistence.jdbc.user", configuration.username());
-            configOverrides.put("jakarta.persistence.jdbc.password", configuration.password());
-            configOverrides.put("jakarta.persistence.jdbc.url", configuration.getDbUrl());
+            configOverrides.put("jakarta.persistence.jdbc.user", configuration.getUsername());
+            configOverrides.put("jakarta.persistence.jdbc.password", configuration.getPassword());
+            configOverrides.put("jakarta.persistence.jdbc.url", configuration.getUrl());
 
 
             EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory(
-                    this.configuration.persistenceUnitName(),
+                    this.configuration.getPersistenceUnit(),
                     configOverrides
             );
 

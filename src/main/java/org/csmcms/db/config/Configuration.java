@@ -97,7 +97,7 @@ public class Configuration {
         this.url = url;
     }
 
-    public Builder builder() {
+    public static DbServiceSetter builder() {
         return new Builder();
     }
 
@@ -150,7 +150,7 @@ public class Configuration {
         Configuration build();
     }
 
-    private class Builder implements 
+    private static class Builder implements
      DbServiceSetter, PersisteneUnitSetter,
      SqLitePathSetter, PostgresDbNameSetter,
      MySqlDbNameSetter, TestContainerDbNameSetter, 
@@ -228,7 +228,7 @@ public class Configuration {
                 case MySQL -> "mysql";
                 case Postgres -> "postgres";
                 case SQLite -> "sqlite";
-                case TestContainers -> "postrgres";
+                case TestContainers -> "postgres";
             };
             dbUrl.append(name)
                  .append("://")
