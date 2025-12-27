@@ -2,10 +2,10 @@ package org.csmcms.db;
 
 import org.junit.jupiter.api.Test;
 
-class SamCmsDbTest {
+class CsmCmsTest {
 
     @Test
     void testMakeNewSamCmsDbConnection() {
-        SamCmsDb samCmsDb = new SamCmsDb();
+//        CsmCms csmCms = new CsmCms();
     }
 }
