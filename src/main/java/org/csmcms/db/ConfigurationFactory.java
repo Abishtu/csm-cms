@@ -15,9 +15,9 @@ public class ConfigurationFactory {
                 .setPostgresDbService()
                 .setName(env.get("POSTGRES_DB"))
                 .setPersistenceUnit("org.samcms.db")
-                .setUsername("POSTGRES_USER")
-                .setPassword("POSTGRES_PASSWORD")
-                .setHost("POSTGRES_HOSTNAME")
+                .setUsername(env.get("POSTGRES_USER"))
+                .setPassword(env.get("POSTGRES_PASSWORD"))
+                .setHost(env.get("POSTGRES_HOSTNAME"))
                 .setUrl().build();
     }
 }

@@ -226,9 +226,9 @@ public class Configuration {
             var dbUrl = new StringBuilder("jdbc:");
             var name = switch (this.dbService) {
                 case MySQL -> "mysql";
-                case Postgres -> "postgres";
+                case Postgres -> "postgresql";
                 case SQLite -> "sqlite";
-                case TestContainers -> "postgres";
+                case TestContainers -> "postgresql";
             };
             dbUrl.append(name)
                  .append("://")
