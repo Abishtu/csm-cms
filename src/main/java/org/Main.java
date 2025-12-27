@@ -2,6 +2,9 @@ package org;
 
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+import org.csmcms.db.ConfigurationFactory;
+import org.csmcms.db.CsmCms;
+import org.csmcms.db.config.Configuration;
 import org.csmcms.db.dao.ContentDao;
 import org.csmcms.db.model.Content;
 
@@ -14,48 +17,11 @@ import java.util.Optional;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     static void main() {
-        Map<String, String> env = System.getenv();
-        Map<String, Object> configOverrides = new HashMap<String, Object>();
-
-        String postgresHost = "";
-        String postgresDb = "";
-        StringBuilder postgresUrl = new StringBuilder("jdbc:postgresql://");
-
-        for (String envName : env.keySet()) {
-            if (envName.contains("POSTGRES_USER")) {
-                configOverrides.put("jakarta.persistence.jdbc.user", env.get(envName));
-            }
-
-            if (envName.contains("POSTGRES_PASSWORD")) {
-                configOverrides.put("jakarta.persistence.jdbc.password", env.get(envName));
-            }
-
-            if (envName.contains("POSTGRES_HOSTNAME")) {
-                postgresHost = env.get(envName);
-            }
-
-            if (envName.contains("POSTGRES_DB")) {
-                postgresDb = env.get(envName);
-            }
-        }
-
-        if (!postgresHost.isEmpty() && !postgresDb.isEmpty()) {
-            String url = postgresUrl
-                    .append(postgresHost)
-                    .append("/")
-                    .append(postgresDb)
-                    .toString();
-
-            configOverrides.put("jakarta.persistence.jdbc.url", url);
-        }
+        Configuration config = ConfigurationFactory.configurationFromEnvVars();
+        CsmCms cms = new CsmCms(config);
 
         try {
-            EntityManagerFactory emf = Persistence.createEntityManagerFactory(
-                    "org.samcms.db",
-                    configOverrides
-            );
-
-
+            EntityManagerFactory emf = cms.getEntityManagerFactory();
 
             Optional<List<Content>> contentList = ContentDao
                                                         .builder()
