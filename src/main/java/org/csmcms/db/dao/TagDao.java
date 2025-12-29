@@ -3,34 +3,34 @@ package org.csmcms.db.dao;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceException;
-import org.csmcms.db.model.Content;
+import org.csmcms.db.model.Tag;
 
 import java.util.List;
 import java.util.Optional;
 
-
-public class ContentDao {
+public class TagDao {
 
     public static InitQueryBuilder builder() {
-        return new ContentDaoQueryBuilder();
+        return new TagDaoQueryBuilder();
     }
 
     public interface InitQueryBuilder {
         NewQuery init(EntityManagerFactory emf);
     }
-
+    
     public interface NewQuery {
         // Basic CRUD
-        Optional<Content> save(Content content);
-        Optional<Content> update(Content content);
-        Optional<Content> delete(long id);
+        Optional<Tag> save(Tag Tag);
+        Optional<Tag> update(Tag Tag);
+        Optional<Tag> delete(long id);
 
-        Optional<List<Content>> getContentList();
-        Optional<Content> getContent(long id);
+        Optional<List<Tag>> getTagList();
+        Optional<Tag> getTag(long id);
     }
 
-    static class ContentDaoQueryBuilder implements InitQueryBuilder, NewQuery {
+    static class TagDaoQueryBuilder implements InitQueryBuilder, NewQuery {
         private EntityManager em;
+
         @Override
         public NewQuery init(EntityManagerFactory emf) {
             this.em = emf.createEntityManager();
@@ -38,50 +38,50 @@ public class ContentDao {
         }
 
         @Override
-        public Optional<Content> save(Content content) {
+        public Optional<Tag> save(Tag tag) {
             try {
                 var tx = em.getTransaction();
                 tx.begin();
-                em.persist(content);
+                em.persist(tag);
                 em.flush();
                 tx.commit();
                 em.close();
-                return Optional.of(content);
+                return Optional.of(tag);
             } catch (PersistenceException e) {
                 return Optional.empty();
             }
         }
 
         @Override
-        public Optional<Content> update(Content content) {
+        public Optional<Tag> update(Tag tag) {
             try {
                 var tx = em.getTransaction();
                 tx.begin();
-                em.merge(content);
+                em.merge(tag);
                 em.flush();
                 tx.commit();
                 em.close();
-                return Optional.of(content);
+                return Optional.of(tag);
             } catch (PersistenceException e) {
                 return Optional.empty();
             }
         }
 
         @Override
-        public Optional<Content> delete(long id) {
+        public Optional<Tag> delete(long id) {
             return Optional.empty();
         }
 
         @Override
-        public Optional<List<Content>> getContentList() {
-            List<Content> contents = (List<Content>) this.em.createQuery("FROM Content").getResultList();
-            return Optional.of(contents);
+        public Optional<List<Tag>> getTagList() {
+            List<Tag> tags = (List<Tag>) this.em.createQuery("FROM Tag").getResultList();
+            return Optional.of(tags);
         }
 
         @Override
-        public Optional<Content> getContent(long id) {
-            Content content = this.em.find(Content.class, id);
-            return Optional.of(content);
+        public Optional<Tag> getTag(long id) {
+            Tag tag = em.find(Tag.class, id);
+            return Optional.of(tag);
         }
     }
 }

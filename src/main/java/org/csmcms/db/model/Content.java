@@ -28,7 +28,7 @@ public class Content {
     @Column(name="content_path")
     private String contentPath;
 
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
             name = "content_tags",
             joinColumns = @JoinColumn(name = "column_id"),

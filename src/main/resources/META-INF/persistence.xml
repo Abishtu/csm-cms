@@ -23,4 +23,27 @@
     <class>org.csmcms.db.model.Tag</class>
 
   </persistence-unit>
+
+  <persistence-unit name="org.samcms.db.test" transaction-type="RESOURCE_LOCAL">
+    <description>Persistence unit for Sam CMS - A CMS package for my blog</description>
+    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+
+    <properties>
+      <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+      <property name="jakarta.persistence.jdbc.url" value="#"/>
+      <property name="jakarta.persistence.jdbc.user" value="#"/>
+      <property name="jakarta.persistence.jdbc.password" value="#"/>
+
+      <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+      <property name="hibernate.hbm2ddl.auto" value="update"/>
+
+      <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
+      <property name="jakarta.persistence.sql-load-script-source" value="testData.sql"/>
+    </properties>
+
+    <class>org.csmcms.db.model.Content</class>
+    <class>org.csmcms.db.model.Tag</class>
+
+  </persistence-unit>
 </persistence>

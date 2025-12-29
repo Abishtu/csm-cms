@@ -17,7 +17,16 @@ public class Configuration {
     private String password;
 
     private String host;
+    private Optional<Integer> port;
     private String url;
+
+    public void setPort(Optional<Integer> port) {
+        this.port = port;
+    }
+
+    public Optional<Integer> getPort() {
+        return port;
+    }
 
     public DbService getDbService() {
         return dbService;
@@ -31,7 +40,7 @@ public class Configuration {
         return persistenceUnit;
     }
 
-    private void setPersistenceUnit(String pu) {
+    public void setPersistenceUnit(String pu) {
         this.persistenceUnit = pu;
     }
 
@@ -144,6 +153,7 @@ public class Configuration {
 
     public interface UrlSetter {
         ConfigurationBuilder setUrl();
+        ConfigurationBuilder setUrl(Integer port);
     }
 
     public interface ConfigurationBuilder {
@@ -211,7 +221,7 @@ public class Configuration {
         @Override
         public TestContainerDbNameSetter setTestContainerDbService() {
             this.dbService = DbService.TestContainers;
-            this.dbDriver = "com.postgres.Driver";
+            this.dbDriver = "org.testcontainers.jdbc.ContainerDatabaseDriver";
             return this;
         }
 
@@ -228,11 +238,37 @@ public class Configuration {
                 case MySQL -> "mysql";
                 case Postgres -> "postgresql";
                 case SQLite -> "sqlite";
-                case TestContainers -> "postgresql";
+                case TestContainers -> "tc:postgresql";
             };
             dbUrl.append(name)
                  .append("://")
                  .append(host);
+
+            var dbOrPath = switch(this.dbService) {
+                case MySQL, Postgres, TestContainers -> "/"+this.dbName;
+                case SQLite -> ":" + this.dbPath;
+            };
+            dbUrl.append(dbOrPath);
+
+            this.url = dbUrl.toString();
+
+            return this;
+        }
+
+        @Override
+        public ConfigurationBuilder setUrl(Integer port) {
+            var dbUrl = new StringBuilder("jdbc:");
+            var name = switch (this.dbService) {
+                case MySQL -> "mysql";
+                case Postgres -> "postgresql";
+                case SQLite -> "sqlite";
+                case TestContainers -> "tc:postgresql";
+            };
+            dbUrl.append(name)
+                    .append("://")
+                    .append(host)
+                    .append(":")
+                    .append(port);
 
             var dbOrPath = switch(this.dbService) {
                 case MySQL, Postgres, TestContainers -> "/"+this.dbName;
