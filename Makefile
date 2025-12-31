@@ -37,7 +37,7 @@ define migrate
 endef
 
 define ps
-	docker compose -p ${COMPOSE_PROJECT_NAME} -f ./docker/docker-compose.yaml ps
+	docker compose -p ${COMPOSE_PROJECT_NAME} -f ./docker/docker-compose.yaml ps 
 endef
 
 define logs_postgres
