@@ -14,14 +14,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class Dao implements InitQueryBuilder, NewQuery<CmsEntity>, ListQuery<CmsEntity> {
+public abstract class Dao implements NewQuery<CmsEntity>, ListQuery<CmsEntity> {
     private EntityManager em;
     private DaoFilter filter;
 
-    @Override
-    public NewQuery init(EntityManagerFactory emf) {
+    protected Dao(EntityManagerFactory emf) {
         this.em = emf.createEntityManager();
-        return this;
     }
 
     @Override
@@ -32,7 +30,6 @@ public abstract class Dao implements InitQueryBuilder, NewQuery<CmsEntity>, List
             em.persist(entity);
             em.flush();
             tx.commit();
-            em.close();
             return Optional.of(entity);
         } catch (PersistenceException e) {
             return Optional.empty();
@@ -47,7 +44,6 @@ public abstract class Dao implements InitQueryBuilder, NewQuery<CmsEntity>, List
             em.merge(entity);
             em.flush();
             tx.commit();
-            em.close();
             return Optional.of(entity);
         } catch (PersistenceException e) {
             return Optional.empty();
@@ -62,7 +58,6 @@ public abstract class Dao implements InitQueryBuilder, NewQuery<CmsEntity>, List
             CmsEntity entity = em.find(CmsEntity.class, id);
             em.flush();
             tx.commit();
-            em.close();
             return Optional.of(entity);
         }  catch (PersistenceException e) {
             return Optional.empty();
@@ -101,9 +96,22 @@ public abstract class Dao implements InitQueryBuilder, NewQuery<CmsEntity>, List
     }
 
     @Override
-    public Optional<List<CmsEntity>> get() {
-        try {
-            List<CmsEntity> entities = this.em.
-        }
+    public Optional<List<CmsEntity>> getList() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<CmsEntity> get() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<CmsEntity> delete(long id) {
+        return Optional.empty();
+    }
+
+
+    public void close() {
+        this.em.close();
     }
 }

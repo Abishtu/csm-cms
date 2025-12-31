@@ -13,5 +13,5 @@ public interface ListQuery<T> {
 
     ListQuery<T> dateRange(Date start, Date end);
 
-    Optional<List<T>> get();
+    Optional<List<T>> getList();
 }

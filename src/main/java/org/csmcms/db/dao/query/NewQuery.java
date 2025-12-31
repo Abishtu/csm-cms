@@ -1,5 +1,6 @@
 package org.csmcms.db.dao.query;
 
+import org.csmcms.db.model.CmsEntity;
 import org.csmcms.db.model.Content;
 
 import java.util.List;
@@ -12,4 +13,6 @@ public interface NewQuery<T> {
 
     ListQuery<T> list();
     Optional<T> get(long id);
+
+    Optional<CmsEntity> get();
 }

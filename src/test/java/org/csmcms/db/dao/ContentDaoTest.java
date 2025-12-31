@@ -39,11 +39,9 @@ class ContentDaoTest {
                 .setContentType("text/plain")
                 .setContentPath("#")
                 .build();
-
-        var createdContent = ContentDao
-                .builder()
-                .init(emf)
-                .save(newContent);
+        var contentDao = new ContentDao(emf);
+        var createdContent = contentDao.save(newContent);
+        contentDao.close();
 
         assertTrue(createdContent.isPresent());
         assertTrue(createdContent.get().getId() > 0);
@@ -59,20 +57,18 @@ class ContentDaoTest {
                 .setContentPath("#")
                 .build();
 
-        var createdContent = ContentDao
-                .builder()
-                .init(emf)
-                .save(newContent);
+        var contentDao = new ContentDao(emf);
+        var createdContent = contentDao.save(newContent);
+        contentDao.close();
 
         assertTrue(createdContent.isPresent());
         assertTrue(createdContent.get().getId() > 0);
 
         long id = createdContent.get().getId();
 
-        var content = ContentDao
-                .builder()
-                .init(emf)
-                .getContent(id);
+        contentDao = new ContentDao(emf);
+        var content = contentDao.get(id);
+        contentDao.close();
 
         assertTrue(content.isPresent());
         assertEquals(id, content.get().getId());
@@ -102,16 +98,13 @@ class ContentDaoTest {
         );
 
         for (Content content : contentList) {
-            ContentDao
-                    .builder()
-                    .init(emf)
-                    .save(content);
+            var contentDao = new ContentDao(emf);
+            contentDao.save(content);
+            contentDao.close();
         }
 
-        var createdContents = ContentDao
-                .builder()
-                .init(emf)
-                .getContentList();
+        var contentDao = new ContentDao(emf);
+        var createdContents = contentDao.list().getList();
 
         assertTrue(createdContents.isPresent());
         assertEquals(contentList.size(), createdContents.get().size());
@@ -128,9 +121,6 @@ class ContentDaoTest {
                 .build();
 
         var createdContent = ContentDao
-                .builder()
-                .init(emf)
-                .save(newContent);
 
         assertTrue(createdContent.isPresent());
         assertTrue(createdContent.get().getId() > 0);
