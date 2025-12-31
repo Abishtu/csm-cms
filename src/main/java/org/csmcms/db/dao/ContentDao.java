@@ -3,30 +3,72 @@ package org.csmcms.db.dao;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceException;
+import org.csmcms.db.dao.query.InitQueryBuilder;
+import org.csmcms.db.dao.query.ListQuery;
+import org.csmcms.db.dao.query.NewQuery;
 import org.csmcms.db.model.Content;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 
-public class ContentDao {
+public class ContentDao implements InitQueryBuilder, NewQuery<Content>, ListQuery<Content> {
 
-    public static InitQueryBuilder builder() {
-        return new ContentDaoQueryBuilder();
+
+    @Override
+    public NewQuery init(EntityManagerFactory emf) {
+        return null;
     }
 
-    public interface InitQueryBuilder {
-        NewQuery init(EntityManagerFactory emf);
+    @Override
+    public ListQuery<Content> limit(int limit) {
+        return null;
     }
 
-    public interface NewQuery {
-        // Basic CRUD
-        Optional<Content> save(Content content);
-        Optional<Content> update(Content content);
-        Optional<Content> delete(long id);
+    @Override
+    public ListQuery<Content> offset(int offset) {
+        return null;
+    }
 
-        Optional<List<Content>> getContentList();
-        Optional<Content> getContent(long id);
+    @Override
+    public ListQuery<Content> ids(List<Integer> ids) {
+        return null;
+    }
+
+    @Override
+    public ListQuery<Content> dateRange(Date start, Date end) {
+        return null;
+    }
+
+    @Override
+    public Optional<List<Content>> get() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Content> save(Content entity) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Content> update(Content entity) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Content> delete(long id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public ListQuery<Content> list() {
+        return null;
+    }
+
+    @Override
+    public Optional<Content> get(long id) {
+        return Optional.empty();
     }
 
     static class ContentDaoQueryBuilder implements InitQueryBuilder, NewQuery {

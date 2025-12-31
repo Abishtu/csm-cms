@@ -7,29 +7,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.util.Date;
 
 @Entity
-public class Tag {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
-
-    @Column(name="created_at") @CreationTimestamp
-    private Date createdAt;
-    @Column(name="updated_at") @UpdateTimestamp
-    private Date updatedAt;
+public class Tag extends CmsEntity {
 
     private String name;
-
-    public Long getId() {
-        return id;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
 
     public String getName() {
         return name;
