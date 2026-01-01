@@ -15,9 +15,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class Dao<T extends CmsEntity> implements NewQuery<T>, ListQuery<T> {
+public abstract class Dao<T extends CmsEntity, F extends DaoFilter> implements NewQuery<T>, ListQuery<T> {
     protected EntityManager em;
-    protected DaoFilter filter;
+    protected F filter;
+    protected StringBuilder listQuery;
 
     protected Dao(EntityManagerFactory emf) {
         this.em = emf.createEntityManager();
@@ -58,7 +59,7 @@ public abstract class Dao<T extends CmsEntity> implements NewQuery<T>, ListQuery
 
     @Override
     public ListQuery<T> list() {
-        this.filter = new DaoFilter();
+        this.filter = new F();
         return this;
     }
 
