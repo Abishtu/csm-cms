@@ -105,6 +105,7 @@ class ContentDaoTest {
 
         var contentDao = new ContentDao(emf);
         var createdContents = contentDao.list().getList();
+        contentDao.close();
 
         assertTrue(createdContents.isPresent());
         assertEquals(contentList.size(), createdContents.get().size());
@@ -120,19 +121,22 @@ class ContentDaoTest {
                 .setContentPath("#")
                 .build();
 
-        var createdContent = ContentDao
+        var contentDao = new ContentDao(emf);
+        var createdContent = contentDao.save(newContent);
+        contentDao.close();
 
         assertTrue(createdContent.isPresent());
         assertTrue(createdContent.get().getId() > 0);
 
-        var contentToUpdate = createdContent.get();
+        var contentToUpdate = (Content) createdContent.get();
 
         contentToUpdate.setName("new name");
 
-        var updatedContent = ContentDao.builder().init(emf).update(contentToUpdate);
+        contentDao = new ContentDao(emf);
+        var updatedContent = contentDao.update(contentToUpdate);
 
         assertTrue(updatedContent.isPresent());
-        assertEquals(contentToUpdate.getName(), updatedContent.get().getName());
+        assertEquals(contentToUpdate.getName(), ((Content)updatedContent.get()).getName());
     }
 
     @Test
@@ -170,17 +174,17 @@ class ContentDaoTest {
                 .addTag(existingTag)
                 .build();
 
-        var createdContent = ContentDao
-                .builder()
-                .init(emf)
+        var contentDao = new ContentDao(emf);
+        var createdContent = contentDao
                 .save(newContent);
+        contentDao.close();
 
         assertTrue(createdContent.isPresent());
         assertTrue(createdContent.get().getId() > 0);
 
-        assertEquals(1, createdContent.get().getTags().size());
+        assertEquals(1, ((Content)createdContent.get()).getTags().size());
 
-        for (Tag contentTag  : createdContent.get().getTags()) {
+        for (Tag contentTag  : ((Content)createdContent.get()).getTags()) {
             assertEquals(contentTag.getId(), existingTag.getId());
         }
 

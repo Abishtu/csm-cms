@@ -6,7 +6,7 @@ import org.csmcms.db.model.Content;
 import java.util.List;
 import java.util.Optional;
 
-public interface NewQuery<T> {
+public interface NewQuery<T extends CmsEntity> {
     Optional<T> save(T entity);
     Optional<T> update(T entity);
     Optional<T> delete(long id);
@@ -14,5 +14,4 @@ public interface NewQuery<T> {
     ListQuery<T> list();
     Optional<T> get(long id);
 
-    Optional<CmsEntity> get();
 }
