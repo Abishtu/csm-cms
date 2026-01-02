@@ -1,6 +1,10 @@
 package org.csmcms.db.dao;
 
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Expression;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.csmcms.db.dao.filter.ContentDaoFilter;
 import org.csmcms.db.dao.query.InitQueryBuilder;
 import org.csmcms.db.dao.query.ListQuery;
@@ -8,16 +12,13 @@ import org.csmcms.db.dao.query.NewQuery;
 import org.csmcms.db.model.CmsEntity;
 import org.csmcms.db.model.Content;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 public class ContentDao extends Dao<Content, ContentDaoFilter>  {
 
     public ContentDao(EntityManagerFactory emf) {
         super(emf);
-        this.listQuery = new StringBuilder("SELECT c FROM Content c\n");
     }
 
     @Override
@@ -33,6 +34,8 @@ public class ContentDao extends Dao<Content, ContentDaoFilter>  {
     @Override
     public ListQuery<Content> list() {
         this.filter = new ContentDaoFilter();
+        this.query = this.cb.createQuery(Content.class);
+        this.root = query.from(Content.class);
         return this;
     }
 
@@ -42,24 +45,31 @@ public class ContentDao extends Dao<Content, ContentDaoFilter>  {
             return Optional.empty();
         }
 
-        // Date Range
+        ArrayList<Predicate> predicates = new ArrayList<>();
+
         var startDate = this.filter.getStartDate();
+        if (startDate != null) {
+            predicates.add(
+                    cb.greaterThanOrEqualTo(root.get("createdAt"), startDate)
+            );
+        }
+
         var endDate = this.filter.getEndDate();
-        if (startDate != null &&  endDate != null) {
-            this.listQuery.append("WHERE c.createdAt BETWEEN :startDate AND :endDate\n");
+        if (endDate != null) {
+            predicates.add(cb.lessThanOrEqualTo(root.get("createdAt"), endDate));
         }
 
-        var idList = this.filter.getIds();
-        if (idList != null && !idList.isEmpty()) {
-            this.listQuery.append("AND c.id = :ids;");
+        var ids =  this.filter.getIds();
+        if (ids != null && !ids.isEmpty()) {
+            List<Integer> idsList = ids.stream().toList();
+            Expression<Integer> idsExpression = root.get("id");
+            Predicate idsPredicate = idsExpression.in(idsList);
+            predicates.add(idsPredicate);
         }
 
-        try {
-            TypedQuery<Content> finalListQuery = this.em.createQuery(this.listQuery.toString(), Content.class);
-            finalListQuery.setParameter("ids", idList);
-            finalListQuery.setParameter("startDate", startDate);
-            finalListQuery.setParameter("endDate", endDate);
-        }
+        query.select(root).where(predicates);
+
+        return Optional.empty();
     }
 
 }

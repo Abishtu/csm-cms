@@ -3,6 +3,9 @@ package org.csmcms.db.dao;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceException;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import org.csmcms.db.dao.filter.DaoFilter;
 import org.csmcms.db.dao.query.InitQueryBuilder;
 import org.csmcms.db.dao.query.ListQuery;
@@ -19,9 +22,14 @@ public abstract class Dao<T extends CmsEntity, F extends DaoFilter> implements N
     protected EntityManager em;
     protected F filter;
     protected StringBuilder listQuery;
+    protected CriteriaBuilder cb;
+
+    protected CriteriaQuery<T> query;
+    protected Root<T> root;
 
     protected Dao(EntityManagerFactory emf) {
         this.em = emf.createEntityManager();
+        this.cb = this.em.getCriteriaBuilder();
     }
 
     @Override
