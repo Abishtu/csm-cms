@@ -67,7 +67,6 @@ public abstract class Dao<T extends CmsEntity, F extends DaoFilter> implements N
 
     @Override
     public ListQuery<T> list() {
-        this.filter = new F();
         return this;
     }
 
@@ -84,7 +83,7 @@ public abstract class Dao<T extends CmsEntity, F extends DaoFilter> implements N
     }
 
     @Override
-    public ListQuery<T> ids(ArrayList<Integer> ids) {
+    public ListQuery<T> ids(ArrayList<Long> ids) {
         this.filter.setIds(ids);
         return this;
     }

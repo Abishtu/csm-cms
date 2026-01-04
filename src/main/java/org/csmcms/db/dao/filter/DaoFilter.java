@@ -10,7 +10,7 @@ public class DaoFilter {
     private Date startDate;
     private Date endDate;
 
-    private ArrayList<Integer> ids;
+    private ArrayList<Long> ids;
 
     public DaoFilter() {
         this.limit = 100;
@@ -49,11 +49,11 @@ public class DaoFilter {
         this.endDate = endDate;
     }
 
-    public ArrayList<Integer> getIds() {
+    public ArrayList<Long> getIds() {
         return ids;
     }
 
-    public void setIds(ArrayList<Integer> ids) {
+    public void setIds(ArrayList<Long> ids) {
         this.ids = ids;
     }
 }

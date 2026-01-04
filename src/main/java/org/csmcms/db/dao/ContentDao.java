@@ -50,7 +50,10 @@ public class ContentDao extends Dao<Content, ContentDaoFilter>  {
         var startDate = this.filter.getStartDate();
         if (startDate != null) {
             predicates.add(
-                    cb.greaterThanOrEqualTo(root.get("createdAt"), startDate)
+                cb.greaterThanOrEqualTo(
+                    root.get("createdAt"),
+                    startDate
+                )
             );
         }
 
@@ -61,15 +64,22 @@ public class ContentDao extends Dao<Content, ContentDaoFilter>  {
 
         var ids =  this.filter.getIds();
         if (ids != null && !ids.isEmpty()) {
-            List<Integer> idsList = ids.stream().toList();
-            Expression<Integer> idsExpression = root.get("id");
+            List<Long> idsList = ids.stream().toList();
+            Expression<Long> idsExpression = root.get("id");
             Predicate idsPredicate = idsExpression.in(idsList);
             predicates.add(idsPredicate);
         }
 
         query.select(root).where(predicates);
-
-        return Optional.empty();
+        try {
+            List<Content> resultsList = em.createQuery(query)
+                    .setFirstResult(this.filter.getOffset())
+                    .setMaxResults(this.filter.getLimit())
+                    .getResultList();
+            return Optional.of(resultsList);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
 }

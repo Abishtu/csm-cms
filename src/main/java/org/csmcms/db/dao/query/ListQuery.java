@@ -9,7 +9,7 @@ public interface ListQuery<T> {
 
     ListQuery<T> limit(int limit);
     ListQuery<T> offset(int offset);
-    ListQuery<T> ids(ArrayList<Integer> ids);
+    ListQuery<T> ids(ArrayList<Long> ids);
 
     ListQuery<T> dateRange(Date start, Date end);
 

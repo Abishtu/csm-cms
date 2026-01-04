@@ -112,6 +112,121 @@ class ContentDaoTest {
     }
 
     @Test
+    void testGetContentListWithLimit() {
+        var contentList = new ArrayList<Content>();
+        contentList.add(
+                Content
+                        .builder()
+                        .setName("nc1")
+                        .setDescription("A new piece of content")
+                        .setContentType("text/plain")
+                        .setContentPath("#")
+                        .build()
+        );
+
+        contentList.add(
+                Content
+                        .builder()
+                        .setName("nc2")
+                        .setDescription("A new piece of content")
+                        .setContentType("text/plain")
+                        .setContentPath("#")
+                        .build()
+        );
+
+        for (Content content : contentList) {
+            var contentDao = new ContentDao(emf);
+            contentDao.save(content);
+            contentDao.close();
+        }
+
+        var contentDao = new ContentDao(emf);
+        var createdContents = contentDao.list().limit(1).getList();
+        contentDao.close();
+
+        assertTrue(createdContents.isPresent());
+        assertEquals(1, createdContents.get().size());
+    }
+
+    @Test
+    void testGetContentListWithOffset() {
+        var contentList = new ArrayList<Content>();
+        contentList.add(
+            Content
+                .builder()
+                .setName("nc1")
+                .setDescription("A new piece of content")
+                .setContentType("text/plain")
+                .setContentPath("#")
+                .build()
+        );
+
+        contentList.add(
+            Content
+                .builder()
+                .setName("nc2")
+                .setDescription("A new piece of content")
+                .setContentType("text/plain")
+                .setContentPath("#")
+                .build()
+        );
+
+        for (Content content : contentList) {
+            var contentDao = new ContentDao(emf);
+            contentDao.save(content);
+            contentDao.close();
+        }
+
+        var contentDao = new ContentDao(emf);
+        var createdContents = contentDao.list().offset(1).getList();
+        contentDao.close();
+
+        assertTrue(createdContents.isPresent());
+        assertEquals(1, createdContents.get().size());
+    }
+
+    @Test
+    void testGetContentListWithIdsFilter() {
+        var contentList = new ArrayList<Content>();
+        contentList.add(
+            Content
+                .builder()
+                .setName("nc1")
+                .setDescription("A new piece of content")
+                .setContentType("text/plain")
+                .setContentPath("#")
+                .build()
+        );
+
+        contentList.add(
+            Content
+                .builder()
+                .setName("nc2")
+                .setDescription("A new piece of content")
+                .setContentType("text/plain")
+                .setContentPath("#")
+                .build()
+        );
+
+        for (Content content : contentList) {
+            var contentDao = new ContentDao(emf);
+            contentDao.save(content);
+            contentDao.close();
+        }
+
+        var ids = new ArrayList<Long>();
+        ids.add(contentList.getFirst().getId());
+
+        var contentDao = new ContentDao(emf);
+        var createdContents = contentDao.list().ids(ids).getList();
+        contentDao.close();
+
+        assertTrue(createdContents.isPresent());
+        assertEquals(1, createdContents.get().size());
+        assertEquals(ids.getFirst(), createdContents.get().getFirst().getId());
+    }
+
+    @Test
     void testUpdateContent() {
         Content newContent = Content
                 .builder()
